@@ -1,4 +1,4 @@
-package vehicle.engine;
+package application.vehicle.engine;
 
 public class ElectricalEngine extends AbstractEngine {
     private double batterySize;

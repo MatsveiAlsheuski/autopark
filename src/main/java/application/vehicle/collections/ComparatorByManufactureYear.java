@@ -1,6 +1,6 @@
-package vehicle.collections;
+package application.vehicle.collections;
 
-import vehicle.Vehicle;
+import application.vehicle.Vehicle;
 
 import java.util.Comparator;
 

@@ -1,4 +1,4 @@
-package exception;
+package application.exception;
 
 public class DefectedVehicleException extends Exception {
     public DefectedVehicleException(String message) {

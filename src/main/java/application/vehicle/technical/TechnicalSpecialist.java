@@ -1,14 +1,14 @@
-package vehicle.technical;
+package application.vehicle.technical;
 
-import vehicle.engine.DieselEngine;
-import vehicle.engine.ElectricalEngine;
-import vehicle.engine.GasolineEngine;
-import vehicle.Color;
-import vehicle.VehicleType;
+import application.vehicle.engine.DieselEngine;
+import application.vehicle.engine.ElectricalEngine;
+import application.vehicle.engine.GasolineEngine;
+import application.vehicle.Color;
+import application.vehicle.VehicleType;
 
 public class TechnicalSpecialist {
 
-    private TechnicalSpecialist() {
+    public TechnicalSpecialist() {
     }
 
     public static final int LOWER_LIMIT_MANUFACTURE_YEAR = 1886;

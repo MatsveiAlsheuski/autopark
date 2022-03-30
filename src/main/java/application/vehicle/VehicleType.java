@@ -1,4 +1,4 @@
-package vehicle;
+package application.vehicle;
 
 public class VehicleType {
 

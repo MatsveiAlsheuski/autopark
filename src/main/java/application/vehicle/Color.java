@@ -1,4 +1,4 @@
-package vehicle;
+package application.vehicle;
 
 public enum Color {
     RED("Red"),

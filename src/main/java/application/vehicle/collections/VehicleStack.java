@@ -1,9 +1,6 @@
-package vehicle.collections;
+package application.vehicle.collections;
 
-import vehicle.Vehicle;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import application.vehicle.Vehicle;
 
 public class VehicleStack {
     private Vehicle[] stack;
@@ -44,22 +41,20 @@ public class VehicleStack {
     }
 
 
-    public static void main(String[] args) throws IOException {
+  /*  public static void main(String[] args) throws IOException {
         VehicleCollection vehicleCollection = new VehicleCollection();
-        vehicleCollection.loadRents("rents");
-        vehicleCollection.loadTypes("types");
-        vehicleCollection.loadVehicles("vehicles");
+        vehicleCollection.init();
         // vehicleCollection.display();
 
         VehicleStack garage = new VehicleStack(10);
-        ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
-        for (Vehicle auto : vehicle) {
+        ArrayList<Vehicle> appliction.vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
+        for (Vehicle auto : appliction.vehicle) {
             garage.push(auto);
         }
 
         while (garage.size() > 0) {
             garage.pop();
         }
-    }
+    }*/
 
 }

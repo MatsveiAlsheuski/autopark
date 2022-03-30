@@ -1,7 +1,7 @@
-package vehicle.collections;
+package application.vehicle.collections;
 
-import vehicle.Vehicle;
-import vehicle.technical.MechanicService;
+import application.vehicle.Vehicle;
+import application.vehicle.technical.MechanicService;
 
 import java.util.Comparator;
 import java.util.HashMap;

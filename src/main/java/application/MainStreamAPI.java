@@ -1,27 +1,24 @@
-import vehicle.Vehicle;
-import vehicle.collections.*;
-import vehicle.technical.Fixer;
-import vehicle.technical.MechanicService;
+package application;
+
+import application.vehicle.Vehicle;
+import application.vehicle.collections.*;
+import application.vehicle.technical.Fixer;
+import application.vehicle.technical.MechanicService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MainStreamAPI {
     public static void main(String[] args) throws IOException {
         VehicleCollection vehicleCollection = new VehicleCollection();
-        vehicleCollection.loadRents("rents");
-        vehicleCollection.loadTypes("types");
-        //vehicleCollection.loadVehicles("vehicles");
-        //ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
+        vehicleCollection.init();
+        //ArrayList<Vehicle> appliction.vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
         Fixer mechanicService = new MechanicService();
 
-        List<Vehicle> brokenVehicle1 = vehicleCollection.loadVehicles("vehicles").stream()
-                //   .filter(x -> !mechanicService.detectBreaking(x).isEmpty())         /**поиск неисправностей и запись их в файл*/
+        List<Vehicle> brokenVehicle1 = vehicleCollection.getVehicleList()/*loadVehicles("vehicles")*/.stream()
+                 //  .filter(x -> !mechanicService.detectBreaking(x).isEmpty())         /**поиск неисправностей и запись их в файл*/
                 .filter(x -> mechanicService.isBroken(x))                               /**поиск неисправных машини используя файл,*/
                 //.distinct()                                                           /**убирает дубликаты без дубликатов*/
                 .collect(Collectors.toList());
@@ -48,9 +45,9 @@ public class MainStreamAPI {
         System.out.println();
 /**Логика мойки машин*/
         VehicleCollection vehicleCollection2 = new VehicleCollection();
-        vehicleCollection2.loadRents("rents");
-        vehicleCollection2.loadTypes("types");
-        vehicleCollection2.loadVehicles("vehicles");
+       // vehicleCollection2.loadRents("rents");
+       // vehicleCollection2.loadTypes("types");
+       // vehicleCollection2.loadVehicles("vehicles");
         ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>) vehicleCollection2.getVehicleList();
         VehicleQueue queueForWashing = new VehicleQueue(10);
 
@@ -64,7 +61,7 @@ public class MainStreamAPI {
 /**Логика гаража машин*/
         VehicleStack stack = new VehicleStack(10);
        vehicle.forEach(stack::push);
-       // vehicle.stream().peek(x->vehicle.forEach(stack::push)).forEach(x -> stack.pop());
+       // appliction.vehicle.stream().peek(x->appliction.vehicle.forEach(stack::push)).forEach(x -> stack.pop());
         //Stream.of(stack).forEach(x -> x.pop());
         while (stack.size() > 0) {
             stack.pop();

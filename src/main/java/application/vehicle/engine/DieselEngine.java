@@ -1,4 +1,4 @@
-package vehicle.engine;
+package application.vehicle.engine;
 
 public class DieselEngine extends CombustionEngine {
     public DieselEngine(double engineCapacity, double fuelConsumptionPer100, double fuelTankCapacity) {

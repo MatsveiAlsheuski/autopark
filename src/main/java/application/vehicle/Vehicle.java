@@ -1,8 +1,8 @@
-package vehicle;
+package application.vehicle;
 
-import exception.NotVehicleException;
-import vehicle.engine.Startable;
-import vehicle.technical.TechnicalSpecialist;
+import application.exception.NotVehicleException;
+import application.vehicle.engine.Startable;
+import application.vehicle.technical.TechnicalSpecialist;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class Vehicle implements Comparable<Vehicle> {
 
         try {
             if (!TechnicalSpecialist.validateVehicleType(vehicleType))
-                throw new NotVehicleException("Incorrect vehicle Type");
+                throw new NotVehicleException("Incorrect appliction.vehicle Type");
             else this.vehicleType = vehicleType;
             if (!TechnicalSpecialist.validateModelName(modelName))
                 throw new NotVehicleException("Incorrect model Name");
@@ -49,7 +49,7 @@ public class Vehicle implements Comparable<Vehicle> {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Don't create auto");
-           // new vehicle.Vehicle();
+           // new appliction.vehicle.Vehicle();
         }
 
     }

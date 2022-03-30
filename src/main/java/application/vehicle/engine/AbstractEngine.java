@@ -1,4 +1,4 @@
-package vehicle.engine;
+package application.vehicle.engine;
 
 public abstract class AbstractEngine implements Startable {
 

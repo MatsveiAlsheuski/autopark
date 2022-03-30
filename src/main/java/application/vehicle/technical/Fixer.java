@@ -1,8 +1,7 @@
-package vehicle.technical;
+package application.vehicle.technical;
 
-import vehicle.Vehicle;
+import application.vehicle.Vehicle;
 
-import java.io.IOException;
 import java.util.Map;
 
 public interface Fixer {

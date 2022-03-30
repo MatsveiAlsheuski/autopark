@@ -1,9 +1,6 @@
-package vehicle.collections;
+package application.vehicle.collections;
 
-import vehicle.Vehicle;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import application.vehicle.Vehicle;
 
 
 public class VehicleQueue {
@@ -50,17 +47,15 @@ public class VehicleQueue {
     }
 
 
-    public static void main(String[] args) throws IOException {
+   /* public static void main(String[] args) {
         VehicleCollection vehicleCollection = new VehicleCollection();
-        vehicleCollection.loadRents("rents");
-        vehicleCollection.loadTypes("types");
-        vehicleCollection.loadVehicles("vehicles");
+        vehicleCollection.init();
         //  vehicleCollection.display();
 
         VehicleQueue queueForWashing = new VehicleQueue(10);
-        ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
+        ArrayList<Vehicle> appliction.vehicle = (ArrayList<Vehicle>) vehicleCollection.getVehicleList();
 
-        for (Vehicle auto : vehicle) {
+        for (Vehicle auto : appliction.vehicle) {
             queueForWashing.enqueue(auto);
         }
         System.out.println(queueForWashing.peek());
@@ -68,6 +63,6 @@ public class VehicleQueue {
             queueForWashing.dequeue();
         }
 
-    }
+    }*/
 
 }
