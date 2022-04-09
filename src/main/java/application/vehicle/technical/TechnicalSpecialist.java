@@ -38,6 +38,7 @@ public class TechnicalSpecialist {
         return false;
     }
 
+
     public static boolean validateRegistrationNumber(String number) {
         if (number != null) {
             char[] numberChar = number.toCharArray();

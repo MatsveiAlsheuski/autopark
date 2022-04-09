@@ -5,4 +5,5 @@ public interface Startable {
     double getTaxPerMonth();
 
     double getMaxKilometers();
+    String getString();
 }

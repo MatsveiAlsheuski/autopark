@@ -5,28 +5,51 @@ import application.infrastructure.core.annotations.Autowired;
 import application.infrastructure.core.annotations.InitMethod;
 import application.vehicle.Vehicle;
 import application.vehicle.VehicleType;
+import application.vehicle.parser.ParserVehicleInterface;
 
 import java.util.*;
 
 public class VehicleCollection/* implements Comparable<appliction.vehicle.Vehicle>*/ {
     private List<VehicleType> vehicleTypeList = new ArrayList<>();
     private List<Vehicle> vehicleList = new ArrayList<>();
+
     @Autowired
-    private ParserVehicleFromFile parser;// = new ParserVehicleFromFile();
+    private ParserVehicleInterface parser;// = new ParserVehicleFromFile();
 
     public VehicleCollection() {
     }
 
     @InitMethod
     public void init() {
-        vehicleTypeList = parser.createVehicleTypes(vehicleTypeList);
-        vehicleList = parser.createVehicles(vehicleList, vehicleTypeList);
+        vehicleTypeList = parser.loadTypes();
+        vehicleList = parser.loadVehicles();
+        parser.saveFromDBToFileOrFromFileToDB();
     }
 
     public List<Vehicle> getVehicleList() {
         return vehicleList;
     }
 
+    public List<VehicleType> getVehicleTypeList() {
+        return vehicleTypeList;
+    }
+
+    public void setVehicleTypeList(List<VehicleType> vehicleTypeList) {
+        this.vehicleTypeList = vehicleTypeList;
+    }
+
+    public void setVehicleList(List<Vehicle> vehicleList) {
+        this.vehicleList = vehicleList;
+    }
+
+    public ParserVehicleInterface getParser() {
+        return parser;
+    }
+
+    public void setParser(ParserVehicleInterface parser) {
+        this.parser = parser;
+    }
+    /*
     public double sumTotalProfit() {
         double sumTotal = 0;
         for (Vehicle vehicle : vehicleList) {
@@ -36,7 +59,7 @@ public class VehicleCollection/* implements Comparable<appliction.vehicle.Vehicl
         return Math.ceil(sumTotal * scale) / scale;
     }
 
-    public void insert(int index, Vehicle v) {
+   public void insert(int index, Vehicle v) {
         try {
             vehicleList.add(index, v);
         } catch (Exception e) {

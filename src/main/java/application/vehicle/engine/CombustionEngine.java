@@ -41,4 +41,16 @@ public abstract class CombustionEngine extends AbstractEngine {
     public void setFuelTankCapacity(double fuelTankCapacity) {
         this.fuelTankCapacity = fuelTankCapacity;
     }
+
+    @Override
+    public String getString() {
+        String engineCap = String.valueOf(engineCapacity);
+        String fuelConsumption = String.valueOf(fuelConsumptionPer100);
+        String fuelTank = String.valueOf(fuelTankCapacity);
+        if (!(engineCapacity % 1 == 0)) engineCap = "\"" + engineCapacity + "\"";
+        if (!(fuelConsumptionPer100 % 1 == 0)) fuelConsumption = "\"" + fuelConsumptionPer100 + "\"";
+        if (!(fuelTankCapacity % 1 == 0)) fuelTank = "\"" + fuelTankCapacity + "\"";
+
+        return "Gasoline," + engineCap + "," + fuelConsumption + "," + fuelTank;
+    }
 }

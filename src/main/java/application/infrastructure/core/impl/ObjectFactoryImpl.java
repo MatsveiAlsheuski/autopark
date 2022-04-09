@@ -18,7 +18,6 @@ public class ObjectFactoryImpl implements ObjectFactory {
     @SneakyThrows
     public ObjectFactoryImpl(Context context) {
         this.context = context;
-/** непонимаю что с конструктором                                                                   */
         Set<Class<? extends ObjectConfigurator>> set =
                 context.getConfig().getScanner().getSubTypesOf(ObjectConfigurator.class);
         for (Class<?> clazz : set) {

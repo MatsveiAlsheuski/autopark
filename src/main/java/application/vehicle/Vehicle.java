@@ -1,6 +1,9 @@
 package application.vehicle;
 
 import application.exception.NotVehicleException;
+import application.vehicle.engine.DieselEngine;
+import application.vehicle.engine.ElectricalEngine;
+import application.vehicle.engine.GasolineEngine;
 import application.vehicle.engine.Startable;
 import application.vehicle.technical.TechnicalSpecialist;
 
@@ -49,21 +52,21 @@ public class Vehicle implements Comparable<Vehicle> {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Don't create auto");
-           // new appliction.vehicle.Vehicle();
+            // new appliction.vehicle.Vehicle();
         }
 
     }
 
-    public double getTotalIncome(){
+    public double getTotalIncome() {
         double sumRent = 0;
         for (Rent rent : rents) {
-         sumRent += rent.getRentCost();
+            sumRent += rent.getRentCost();
         }
         return sumRent;
     }
 
-    public double getTotalProfit(){
-        return getTotalIncome()-getCalcTaxPerMonth();
+    public double getTotalProfit() {
+        return getTotalIncome() - getCalcTaxPerMonth();
     }
 
     public double getCalcTaxPerMonth() {
@@ -155,9 +158,9 @@ public class Vehicle implements Comparable<Vehicle> {
 
     @Override
     public String toString() {
-        return vehicleType.getString() + ", " + modelName + ", " + registrationNumber + ", " + weight +
-                ", " + manufactureYear + ", " + mileage + ", " + color +
-                ", " /*+ volumeOfTheTank +", " */ + engine + ", " + getCalcTaxPerMonth();
+        return vehicleType.getTypeName() + ", " + vehicleType.getTaxCoefficient() + ", "+ modelName + ", "
+                + registrationNumber + ", " + weight + ", " + manufactureYear + ", " + mileage + ", " + color +
+                ", " + engine + ", " + getCalcTaxPerMonth();
     }
 
     @Override
@@ -183,4 +186,13 @@ public class Vehicle implements Comparable<Vehicle> {
         } else if (this.getManufactureYear() < obj.getManufactureYear()) return -1;
         else return 1;
     }
+
+    public String getString() {
+        String colors =
+                color.toString().substring(0, 1).toUpperCase() + color.toString().substring(1).toLowerCase();
+        return id + "," + vehicleType.getId() + "," + modelName + "," + registrationNumber + "," + weight +
+                "," + manufactureYear + "," + mileage + "," + colors +
+                "," + engine.getString();
+    }
+
 }

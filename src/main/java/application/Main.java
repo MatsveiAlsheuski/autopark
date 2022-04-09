@@ -12,16 +12,51 @@ import application.infrastructure.core.impl.ApplicationContext;
 import application.infrastructure.core.impl.CacheImpl;
 import application.infrastructure.core.impl.ObjectFactoryImpl;
 import application.infrastructure.core.impl.ScannerImpl;
+import application.infrastructure.orm.ConnectionFactory;
+import application.infrastructure.orm.EntityManager;
+import application.infrastructure.orm.annotations.Column;
+import application.infrastructure.orm.annotations.ID;
+import application.infrastructure.orm.enums.SqlFieldType;
+import application.infrastructure.orm.impl.ConnectionFactoryImpl;
+import application.infrastructure.orm.impl.EntityManagerImpl;
 import application.vehicle.collections.VehicleCollection;
+import application.vehicle.parser.ParserBreakingsInterface;
+import application.vehicle.parser.ParserVehicleInterface;
+import application.vehicle.parser.impl.ParserBreakingsFromDB;
+import application.vehicle.parser.impl.ParserBreakingsFromFile;
+import application.vehicle.parser.impl.ParserVehicleFromDB;
+import application.vehicle.parser.impl.ParserVehicleFromFile;
 import application.vehicle.technical.Fixer;
 import application.vehicle.technical.MechanicService;
 import application.vehicle.technical.Workroom;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
+      /*  Connection connection = null;
+        String URL = "jdbc:postgresql://localhost:5432/webdb";
+        String userName = "postgres";
+        String password = "root";
+        try {
+            connection = DriverManager.getConnection(URL, userName, password);
+            System.out.println("The DB name is: " + connection.getMetaData().getDatabaseProductName());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }*/
+      /*   Map<String, String> classToSql = Stream.of(SqlFieldType.values()).collect(Collectors.toMap(fieldType -> fieldType.getType().getName(), SqlFieldType::getSqlType));
+
+    for (Map.Entry<String, String> entry : classToSql.entrySet()) {
+        System.out.println(entry.getKey() + " " + entry.getValue());
+    }*/
 
         Map<Class<?>, Class<?>> interfaceToImplementation = new HashMap<>();
         interfaceToImplementation.put(Fixer.class, MechanicService.class);
@@ -32,12 +67,30 @@ public class Main {
         interfaceToImplementation.put(Context.class, ApplicationContext.class);
         interfaceToImplementation.put(ObjectFactory.class, ObjectFactoryImpl.class);
         interfaceToImplementation.put(Scanner.class, ScannerImpl.class);
-        // interfaceToImplementation.put(ParserVehicleFromFile.class, ParserVehicleFromFile.class);
+      //  interfaceToImplementation.put(ParserBreakingsInterface.class, ParserBreakingsFromFile.class);
+       // interfaceToImplementation.put(ParserVehicleInterface.class, ParserVehicleFromFile.class);
+        interfaceToImplementation.put(ParserBreakingsInterface.class, ParserBreakingsFromDB.class);
+       interfaceToImplementation.put(ParserVehicleInterface.class, ParserVehicleFromDB.class);
+        interfaceToImplementation.put(ConnectionFactory.class, ConnectionFactoryImpl.class);
+        interfaceToImplementation.put(EntityManager.class, EntityManagerImpl.class);
 
-        ApplicationContext context = new ApplicationContext("application",interfaceToImplementation);
+        ApplicationContext context = new ApplicationContext("application", interfaceToImplementation);
         VehicleCollection vehicleCollection = context.getObject(VehicleCollection.class);
+        //vehicleCollection.getVehicleList().forEach(v -> System.out.println(v.getCalcTaxPerMonth()));
         Workroom workroom = context.getObject(Workroom.class);
         workroom.checkAllVehicle(vehicleCollection.getVehicleList());
+
+
+/*
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+*/
+
+
+/*
 
         /** первая задача **/
    /*     VehicleType[] types = {new VehicleType(1,"Bus", 1.2),

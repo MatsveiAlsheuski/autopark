@@ -1,4 +1,4 @@
-package application.vehicle.collections;
+package application.vehicle.parser.impl;
 
 import application.infrastructure.core.annotations.Autowired;
 import application.vehicle.Color;
@@ -9,9 +9,13 @@ import application.vehicle.engine.AbstractEngine;
 import application.vehicle.engine.DieselEngine;
 import application.vehicle.engine.ElectricalEngine;
 import application.vehicle.engine.GasolineEngine;
+import application.vehicle.parser.ParserVehicleInterface;
 import application.vehicle.technical.TechnicalSpecialist;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,23 +23,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ParserVehicleFromFile {
+public class ParserVehicleFromFile implements ParserVehicleInterface {
     @Autowired
     TechnicalSpecialist technicalSpecialist;// = new TechnicalSpecialist();
 
     public ParserVehicleFromFile() {
     }
 
-
-    public List<VehicleType> createVehicleTypes(List<VehicleType> vehicleTypeList) {
-        return loadTypes(vehicleTypeList);
-    }
-
-    public List<Vehicle> createVehicles(List<Vehicle> vehicleList, List<VehicleType> vehicleTypeList) {
-        return loadVehicles(vehicleList, vehicleTypeList);
-    }
-
-    private List<VehicleType> loadTypes(List<VehicleType> vehicleTypeList) {
+    public List<VehicleType> loadTypes() {
+        List<VehicleType> vehicleTypeList = new ArrayList<>();
         File fileTypes = new File("src/main/resources/" + "types" + ".csv");
         FileReader fileReaderTypes = null;
         try {
@@ -72,12 +68,13 @@ public class ParserVehicleFromFile {
             e.printStackTrace();
         }
         double rentCost = Double.parseDouble((lines[2].replace(',', '.')).replace('"', ' '));
-        return new Rent(date, rentCost);
+        return new Rent(Integer.parseInt(lines[0]), date, rentCost);
     }
 
-    private List<Vehicle> loadVehicles(List<Vehicle> vehicleList, List<VehicleType> vehicleTypeList) {
+    public List<Vehicle> loadVehicles() {
+        List<Vehicle> vehicleList = new ArrayList<>();
         File fileVehicles = new File("src/main/resources/" + "vehicles" + ".csv");
-        List<VehicleType> vehicleTypes = vehicleTypeList;
+        List<VehicleType> vehicleTypes = loadTypes();
         FileReader fileReaderVehicles = null;
         try {
             fileReaderVehicles = new FileReader(fileVehicles);
@@ -101,29 +98,37 @@ public class ParserVehicleFromFile {
                 lines[2], lines[3], Integer.parseInt(lines[4]), Integer.parseInt(lines[5]), Integer.parseInt(lines[6]),
                 Color.valueOf(lines[7].toUpperCase()), createEngine(lines[8], lines[9]));
         vehicle.setId(Integer.parseInt(lines[0]));
-        vehicle.setRents(searchRents(Integer.parseInt(lines[0])));                                      /**переделать*/
+        vehicle.setRents(loadRentsVehicle(Integer.parseInt(lines[0])));                                      /**переделать*/
         return vehicle;
     }
 
-    private List<Rent> searchRents(int idVehicle) {
+    public List<Rent> loadRents() {
         File fileRents = new File("src/main/resources/" + "rents" + ".csv");
         FileReader fileReaderRents = null;
-        List<Rent> listRentsVehicle = null;
+        List<Rent> listRents = null;
         try {
             fileReaderRents = new FileReader(fileRents);
             BufferedReader bufferedReaderRents = new BufferedReader(fileReaderRents);
-            listRentsVehicle = new ArrayList<>();
+            listRents = new ArrayList<>();
             String line = null;
             while ((line = bufferedReaderRents.readLine()) != null) {
-                String[] lines = line.split(",", 2);
-                if (Integer.parseInt(lines[0]) == idVehicle)
-                    listRentsVehicle.add(createRent(line));
+                listRents.add(createRent(line));
             }
             bufferedReaderRents.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return listRents;
+    }
+
+    private List<Rent> loadRentsVehicle(int idVehicle) {
+        List<Rent> listRentsVehicle = new ArrayList<>();
+        List<Rent> listRents = loadRents();
+        for (Rent rent : listRents) {
+            if (rent.getId() == idVehicle)
+                listRentsVehicle.add(rent);
         }
         return listRentsVehicle;
     }
@@ -172,4 +177,58 @@ public class ParserVehicleFromFile {
             else break;
         return numb;
     }
+
+    public void save(Vehicle vehicle) {
+        String fileVehicles = "src/main/resources/" + "vehicles" + ".csv";
+        String vehicles = vehicle.getString();
+        try {
+            Files.write(Paths.get(fileVehicles), vehicles.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(fileVehicles), "\n".getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save(VehicleType vehicleType) {
+        String fileVehicleType = "src/main/resources/" + "types" + ".csv";
+        String types = vehicleType.getString();
+        try {
+            Files.write(Paths.get(fileVehicleType), types.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(fileVehicleType), "\n".getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void save(Rent rent) {
+        String fileRents = "src/main/resources/" + "rents" + ".csv";
+        String rents = rent.getString();
+        try {
+            Files.write(Paths.get(fileRents), rents.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(fileRents), "\n".getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void saveFromDBToFileOrFromFileToDB() {
+      /*  ParserVehicleInterface parserVehicleInterface = new ParserVehicleFromDB();
+        for (Rent loadRent : parserVehicleInterface.loadRents()) {
+            save(loadRent);
+        }
+        for (VehicleType loadType : parserVehicleInterface.loadTypes()) {
+            save(loadType);
+        }
+
+        for (Vehicle loadVehicle : parserVehicleInterface.loadVehicles()) {
+            save(loadVehicle);
+        }
+        System.out.println("Метод saveFromDBToFileOrFromFileToDB() в ParserVehicleFromFile отработал " + this);*/
+        System.out.println("Метод saveFromDBToFileOrFromFileToDB() в ParserVehicleFromFile отключена запсь в файл " + this);
+
+    }
+
 }
+

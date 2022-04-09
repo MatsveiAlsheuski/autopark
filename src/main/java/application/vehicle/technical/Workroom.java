@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Workroom {
     @Autowired
-    Fixer mechanic;// = new MechanicService();//= new BedMechanicService();
+    Fixer mechanic;
 
     public Workroom() {
     }

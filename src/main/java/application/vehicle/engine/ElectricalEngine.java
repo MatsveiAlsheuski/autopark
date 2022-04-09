@@ -10,11 +10,6 @@ public class ElectricalEngine extends AbstractEngine {
         this.electricityConsumption = electricityConsumption;
     }
 
-   /* @Override
-    public double getTaxPerMonth() {
-        return super();
-    }*/
-
     @Override
     public double getMaxKilometers() {
         return batterySize / electricityConsumption;
@@ -35,4 +30,9 @@ public class ElectricalEngine extends AbstractEngine {
     public void setElectricityConsumption(double electricityConsumption) {
         this.electricityConsumption = electricityConsumption;
     }
+
+    public String getString() {
+        return "Electrical," + batterySize + "," + electricityConsumption;
+    }
+
 }

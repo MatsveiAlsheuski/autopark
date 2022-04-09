@@ -1,6 +1,8 @@
-package application.vehicle.technical;
+package application.vehicle.parser.impl;
 
+import application.vehicle.Order;
 import application.vehicle.Vehicle;
+import application.vehicle.parser.ParserBreakingsInterface;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParserBreakingsFromFile {
+public class ParserBreakingsFromFile implements ParserBreakingsInterface {
 
     public ParserBreakingsFromFile() {
     }
@@ -36,9 +38,9 @@ public class ParserBreakingsFromFile {
 
     public void repair(Vehicle vehicle) {
         File fileOrders = new File("src/main/resources/orders.csv");
-        List<String[]> listOrders = getListOrders();
+        List<Order> listOrders = getListOrders();
         for (int i = listOrders.size() - 1; i >= 0; i--) {
-            if (vehicle.getId() == Integer.parseInt(listOrders.get(i)[0])) {
+            if (vehicle.getId() == listOrders.get(i).getIdVehicle()) {
                 listOrders.remove(i);
                 //            System.out.println(appliction.vehicle);                        /** вывод на экран что машина испавлена*/
             }
@@ -46,7 +48,7 @@ public class ParserBreakingsFromFile {
         try {
             FileWriter fileWriterOrders = new FileWriter(fileOrders, false);
             BufferedWriter bufferWriter = new BufferedWriter(fileWriterOrders);
-            for (String[] listOrder : listOrders) {
+            for (Order listOrder : listOrders) {
                 bufferWriter.write(String.valueOf(listOrder));
                 bufferWriter.write("\n");
             }
@@ -56,12 +58,12 @@ public class ParserBreakingsFromFile {
         }
     }
 
-    public List<String[]> getListOrders(){
+    public List<Order> getListOrders(){
         List<String> list = readOrders();
-        List<String[]> listOrders = new ArrayList<>();
+        List<Order> listOrders = new ArrayList<>();
         for (String string : list) {
-            String[] lines = string.split(",", 3);
-            listOrders.add(lines);
+            String[] lines = string.split(", ", 3);
+            listOrders.add(new Order(Integer.parseInt(lines[0]),lines[1],Integer.parseInt(lines[2])));
         }
         return listOrders;
     }

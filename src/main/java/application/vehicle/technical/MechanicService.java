@@ -2,7 +2,9 @@ package application.vehicle.technical;
 
 import application.exception.DefectedVehicleException;
 import application.infrastructure.core.annotations.Autowired;
+import application.vehicle.Order;
 import application.vehicle.Vehicle;
+import application.vehicle.parser.ParserBreakingsInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,17 +14,16 @@ import java.util.Map;
 public class MechanicService implements Fixer {
     String[] details = {"Фильтр", "Втулка", "Вал", "Ось", "Свеча", "Масло", "ГРМ", "ШРУС"};
     @Autowired
-    private ParserBreakingsFromFile parser;// = new ParserBreakingsFromFile();
+    private ParserBreakingsInterface parser;
 
     public MechanicService() {
     }
 
-
-    public ParserBreakingsFromFile getParser() {
+    public ParserBreakingsInterface getParser() {
         return parser;
     }
 
-    public void setParser(ParserBreakingsFromFile parser) {
+    public void setParser(ParserBreakingsInterface parser) {
         this.parser = parser;
     }
 
@@ -38,15 +39,14 @@ public class MechanicService implements Fixer {
 
     @Override
     public boolean isBroken(Vehicle vehicle) {
-        List<String[]> listOrders = parser.getListOrders();
-        for (String[] listOrder : listOrders) {
-            if (vehicle.getId() == Integer.parseInt(listOrder[0]))
+        List<Order> listOrders = parser.getListOrders();
+        for (Order listOrder : listOrders) {
+            if (vehicle.getId() == listOrder.getIdVehicle())
                 return true;
         }
         return false;
     }
-
-
+/*
     public Vehicle getMaxBrokeCar(ArrayList<Vehicle> vehicle) {
         Map<Integer, Integer> breakingCar = new HashMap(getMapSumBrokeCar());
         int max = 0;
@@ -74,7 +74,7 @@ public class MechanicService implements Fixer {
         }
         return breakingCar;
     }
-/*
+
     public static void main(String[] args) {
         VehicleCollection vehicleCollection = new VehicleCollection();
         vehicleCollection.init();
@@ -99,13 +99,13 @@ public class MechanicService implements Fixer {
      * ремонт одной машины машины ести она неисправна
      */
         /*fixer.repair(appliction.vehicle.get(1));
-        System.out.println(mechanicService.arenda(appliction.vehicle.get(1)));*/
+        System.out.println(mechanicService.arenda(appliction.vehicle.get(1)));
 
-    /* }*/
+  }
     public Vehicle arenda(Vehicle vehicle) throws DefectedVehicleException {
         if (isBroken(vehicle)) throw new DefectedVehicleException("it Brock Car");
         return vehicle;
     }
-
+*/
 }
 

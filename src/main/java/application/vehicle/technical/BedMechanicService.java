@@ -2,6 +2,8 @@ package application.vehicle.technical;
 
 import application.infrastructure.core.annotations.Autowired;
 import application.vehicle.Vehicle;
+import application.vehicle.parser.ParserBreakingsInterface;
+
 
 import java.util.Map;
 
@@ -9,16 +11,16 @@ public class BedMechanicService implements Fixer {
 
     String[] details = {"Фильтр", "Втулка", "Вал", "Ось", "Свеча", "Масло", "ГРМ", "ШРУС"};
     @Autowired
-    private ParserBreakingsFromFile parser = new ParserBreakingsFromFile();
+    private ParserBreakingsInterface parser;// = new ParserBreakingsFromFile();
 
     public BedMechanicService() {
     }
 
-    public ParserBreakingsFromFile getParser() {
+    public ParserBreakingsInterface getParser() {
         return parser;
     }
 
-    public void setParser(ParserBreakingsFromFile parser) {
+    public void setParser(ParserBreakingsInterface parser) {
         this.parser = parser;
     }
 

@@ -14,7 +14,7 @@ public class AutowiredObjectConfigurator implements ObjectConfigurator {
     public void configure(Object object, Context context) {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
-            Autowired autowired = field.getDeclaredAnnotation(Autowired.class);//.getAnnotation(Autowired.class);
+            Autowired autowired = field.getDeclaredAnnotation(Autowired.class);
             if (autowired != null){
                 field.setAccessible(true);
                 field.set(object, context.getObject(field.getType()));

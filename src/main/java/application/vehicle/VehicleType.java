@@ -44,6 +44,8 @@ public class VehicleType {
     }
 
     public String getString() {
-        return typeName + ", " + taxCoefficient;
+        if (taxCoefficient % 1 == 0)
+            return id + "," + typeName + "," + taxCoefficient;
+        return id + "," + typeName + ",\"" + taxCoefficient + "\"";
     }
 }
