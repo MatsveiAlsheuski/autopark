@@ -3,6 +3,7 @@ package application;
 import application.infrastructure.config.Config;
 import application.infrastructure.config.impl.JavaConfig;
 import application.infrastructure.configurations.ObjectConfigurator;
+import application.infrastructure.configurations.ProxyConfigurator;
 import application.infrastructure.configurations.impl.AutowiredObjectConfigurator;
 import application.infrastructure.core.Cache;
 import application.infrastructure.core.Context;
@@ -19,6 +20,7 @@ import application.infrastructure.orm.annotations.ID;
 import application.infrastructure.orm.enums.SqlFieldType;
 import application.infrastructure.orm.impl.ConnectionFactoryImpl;
 import application.infrastructure.orm.impl.EntityManagerImpl;
+import application.infrastructure.threads.configurators.ScheduleConfigurator;
 import application.vehicle.collections.VehicleCollection;
 import application.vehicle.parser.ParserBreakingsInterface;
 import application.vehicle.parser.ParserVehicleInterface;
@@ -26,6 +28,7 @@ import application.vehicle.parser.impl.ParserBreakingsFromDB;
 import application.vehicle.parser.impl.ParserBreakingsFromFile;
 import application.vehicle.parser.impl.ParserVehicleFromDB;
 import application.vehicle.parser.impl.ParserVehicleFromFile;
+import application.vehicle.technical.Diagnostic;
 import application.vehicle.technical.Fixer;
 import application.vehicle.technical.MechanicService;
 import application.vehicle.technical.Workroom;
@@ -42,21 +45,6 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-      /*  Connection connection = null;
-        String URL = "jdbc:postgresql://localhost:5432/webdb";
-        String userName = "postgres";
-        String password = "root";
-        try {
-            connection = DriverManager.getConnection(URL, userName, password);
-            System.out.println("The DB name is: " + connection.getMetaData().getDatabaseProductName());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }*/
-      /*   Map<String, String> classToSql = Stream.of(SqlFieldType.values()).collect(Collectors.toMap(fieldType -> fieldType.getType().getName(), SqlFieldType::getSqlType));
-
-    for (Map.Entry<String, String> entry : classToSql.entrySet()) {
-        System.out.println(entry.getKey() + " " + entry.getValue());
-    }*/
 
         Map<Class<?>, Class<?>> interfaceToImplementation = new HashMap<>();
         interfaceToImplementation.put(Fixer.class, MechanicService.class);
@@ -73,21 +61,17 @@ public class Main {
        interfaceToImplementation.put(ParserVehicleInterface.class, ParserVehicleFromDB.class);
         interfaceToImplementation.put(ConnectionFactory.class, ConnectionFactoryImpl.class);
         interfaceToImplementation.put(EntityManager.class, EntityManagerImpl.class);
+        interfaceToImplementation.put(ProxyConfigurator.class, ScheduleConfigurator.class);
 
         ApplicationContext context = new ApplicationContext("application", interfaceToImplementation);
-        VehicleCollection vehicleCollection = context.getObject(VehicleCollection.class);
-        //vehicleCollection.getVehicleList().forEach(v -> System.out.println(v.getCalcTaxPerMonth()));
-        Workroom workroom = context.getObject(Workroom.class);
-        workroom.checkAllVehicle(vehicleCollection.getVehicleList());
+        Diagnostic diagnostic = context.getObject(Diagnostic.class);
 
-
-/*
+        diagnostic.makeDiagnostic(context);
         try {
-            connection.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-*/
 
 
 /*

@@ -1,6 +1,7 @@
 package application.infrastructure.core.impl;
 
 import application.infrastructure.configurations.ObjectConfigurator;
+import application.infrastructure.configurations.ProxyConfigurator;
 import application.infrastructure.core.Context;
 import application.infrastructure.core.ObjectFactory;
 import application.infrastructure.core.annotations.InitMethod;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class ObjectFactoryImpl implements ObjectFactory {
     private final Context context;
     private final List<ObjectConfigurator> objectConfigurators = new ArrayList<>();
+    private final List<ProxyConfigurator> proxyConfigurators = new ArrayList<>();
 
     @SneakyThrows
     public ObjectFactoryImpl(Context context) {
@@ -22,6 +24,9 @@ public class ObjectFactoryImpl implements ObjectFactory {
                 context.getConfig().getScanner().getSubTypesOf(ObjectConfigurator.class);
         for (Class<?> clazz : set) {
             objectConfigurators.add((ObjectConfigurator) clazz.newInstance());
+        }
+        for (Class<? extends ProxyConfigurator> aClass : context.getConfig().getScanner().getReflections().getSubTypesOf(ProxyConfigurator.class)) {
+            proxyConfigurators.add(aClass.newInstance());
         }
     }
 
@@ -43,12 +48,21 @@ public class ObjectFactoryImpl implements ObjectFactory {
         }
     }
 
+    private <T> T makeProxy(Class<T> implClass, T object){
+        for (ProxyConfigurator proxyConfigurator : proxyConfigurators) {
+            object = proxyConfigurator.makeProxy(object,implClass,context);
+        }
+        return object;
+    }
+
+
     @Override
     @SneakyThrows
     public <T> T createObject(Class<T> implementation) {
         T object = create(implementation);
         configure(object);
         initialize(implementation, object);
+        object = makeProxy(implementation, object);
         return object;
     }
 }
